@@ -91,6 +91,12 @@ int *dnld_tohook;
 extern INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
 extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 
+extern OS_EVENT *(*OSSemCreate)(uint16_t);
+extern void (*OSSemPend)(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
+extern uint8_t (*OSSemPost)(OS_EVENT *pevent);
+
+extern uint8_t (*md380_OSMboxPost)(OS_EVENT *pevent, void *pmsg);
+
 
 //! Functions and Variabes regarding the menu
 extern void*   (*main_menu)(void *);     // menu exec
@@ -173,3 +179,12 @@ extern void  (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_Date
 extern void  (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 extern uint32_t *md380_dmr_id;
+
+extern void (*md380_f_4137)();
+extern void (*md380_f_4520)();
+extern void (*md380_f_4098)();
+extern void (*md380_f_4102)();
+
+extern uint8_t *md380_f_4225_operatingmode;
+extern uint8_t md380_f_4225_operatingmode_menu;
+extern uint8_t md380_f_4225_operatingmode_menu_exit;

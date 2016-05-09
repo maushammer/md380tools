@@ -339,7 +339,11 @@ def flashgetid(dfu):
         elif (buf[2] == 0x14):
             sys.stdout.write("W25Q80BL 1MByte\n");
             size=1*1024*1024;
-        else:
+    elif (buf[0] == 0x10 and buf[1] == 0xdc):
+        if (buf[2] == 0x01):
+            sys.stdout.write("W25Q128FV 16MByte maybe\n");
+            size=16*1024*1024;          
+    else:
             sys.stdout.write("Unkown SPI Flash - please report\n");
     return size;
 
@@ -369,7 +373,8 @@ def spiflashwrite(dfu,filename,adr):
         with open(filename,'rb') as f:
             data = f.read()
             size=len(data)
-
+            dfu.md380_custom(0x91,0x01);  # disable any radio and UI events
+                                          # while on spi flash 
             for n in range(adr,adr+size+1,0x1000):
                 print "erase %x " % n
                 dfu.spiflash_erase64kblock(n)
@@ -383,6 +388,8 @@ def spiflashwrite(dfu,filename,adr):
             if ( lastpartsize  > 0 ):
                 print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
                 dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
+            sys.stdout.write("reboot radio now\n"); 
+            dfu.md380_reboot();
             f.close();
      else:
          sys.stdout.write("can't programm spi flash wrong flash type\n");
